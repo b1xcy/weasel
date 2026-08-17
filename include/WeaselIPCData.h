@@ -237,6 +237,11 @@ struct UIStyle {
   std::wstring current_ascii_icon;
   std::wstring current_half_icon;
   std::wstring current_full_icon;
+  std::wstring background_image;
+  int background_image_border_left;
+  int background_image_border_top;
+  int background_image_border_right;
+  int background_image_border_bottom;
   // label format and mark_text
   std::wstring label_text_format;
   std::wstring mark_text;
@@ -313,6 +318,11 @@ struct UIStyle {
         current_ascii_icon(),
         current_half_icon(),
         current_full_icon(),
+        background_image(),
+        background_image_border_left(0),
+        background_image_border_top(0),
+        background_image_border_right(0),
+        background_image_border_bottom(0),
         label_text_format(L"%s."),
         mark_text(),
         layout_type(LAYOUT_VERTICAL),
@@ -382,6 +392,11 @@ struct UIStyle {
         current_ascii_icon != st.current_ascii_icon ||
         current_half_icon != st.current_half_icon ||
         current_full_icon != st.current_full_icon ||
+        background_image != st.background_image ||
+        background_image_border_left != st.background_image_border_left ||
+        background_image_border_top != st.background_image_border_top ||
+        background_image_border_right != st.background_image_border_right ||
+        background_image_border_bottom != st.background_image_border_bottom ||
         enhanced_position != st.enhanced_position ||
         click_to_capture != st.click_to_capture ||
         label_text_format != st.label_text_format ||
@@ -447,6 +462,11 @@ void serialize(Archive& ar, weasel::UIStyle& s, const unsigned int version) {
   ar & s.current_ascii_icon;
   ar & s.current_half_icon;
   ar & s.current_full_icon;
+  ar & s.background_image;
+  ar & s.background_image_border_left;
+  ar & s.background_image_border_top;
+  ar & s.background_image_border_right;
+  ar & s.background_image_border_bottom;
   ar & s.enhanced_position;
   ar & s.click_to_capture;
   ar & s.label_text_format;

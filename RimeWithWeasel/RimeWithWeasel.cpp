@@ -1176,6 +1176,29 @@ static void _UpdateUIStyle(RimeConfig* config, UI* ui, bool initialize) {
     style.label_font_face = style.font_face;
   if (style.comment_font_face.empty())
     style.comment_font_face = style.font_face;
+  _RimeGetIntStr(config, "style/background_image", style.background_image);
+  if (!style.background_image.empty()) {
+    fs::path image_path(style.background_image);
+    if (image_path.is_relative()) {
+      const fs::path user_image = WeaselUserDataPath() / image_path;
+      const fs::path shared_image = WeaselSharedDataPath() / image_path;
+      std::error_code error;
+      if (fs::is_regular_file(user_image, error))
+        style.background_image = user_image.wstring();
+      else if (fs::is_regular_file(shared_image, error))
+        style.background_image = shared_image.wstring();
+      else
+        style.background_image.clear();
+    }
+  }
+  _RimeGetIntStr(config, "style/background_image_border_left",
+                 style.background_image_border_left, 0, 0, _abs);
+  _RimeGetIntStr(config, "style/background_image_border_top",
+                 style.background_image_border_top, 0, 0, _abs);
+  _RimeGetIntStr(config, "style/background_image_border_right",
+                 style.background_image_border_right, 0, 0, _abs);
+  _RimeGetIntStr(config, "style/background_image_border_bottom",
+                 style.background_image_border_bottom, 0, 0, _abs);
   // get font points
   _RimeGetIntStr(config, "style/font_point", style.font_point);
   if (style.font_point <= 0)

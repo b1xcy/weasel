@@ -93,10 +93,78 @@ WeaselPanel::WeaselPanel(weasel::UI& ui)
 }
 
 WeaselPanel::~WeaselPanel() {
+  m_backgroundImage.reset();
   Gdiplus::GdiplusShutdown(_m_gdiplusToken);
   delete m_layout;
   m_layout = NULL;
   // pDWR.reset();
+}
+
+bool WeaselPanel::_DrawBackgroundImage(CDCHandle& dc, const CRect& rc) {
+  if (m_backgroundImagePath != m_style.background_image) {
+    m_backgroundImage.reset();
+    m_backgroundImagePath = m_style.background_image;
+    if (!m_backgroundImagePath.empty()) {
+      auto image =
+          std::make_unique<Gdiplus::Image>(m_backgroundImagePath.c_str());
+      if (image->GetLastStatus() == Gdiplus::Ok)
+        m_backgroundImage = std::move(image);
+    }
+  }
+  if (!m_backgroundImage || rc.IsRectEmpty())
+    return false;
+
+  const int source_width = static_cast<int>(m_backgroundImage->GetWidth());
+  const int source_height = static_cast<int>(m_backgroundImage->GetHeight());
+  const int source_left =
+      min(m_style.background_image_border_left, source_width);
+  const int source_top =
+      min(m_style.background_image_border_top, source_height);
+  const int source_right =
+      min(m_style.background_image_border_right, source_width - source_left);
+  const int source_bottom =
+      min(m_style.background_image_border_bottom, source_height - source_top);
+
+  int destination_left = min(DPI_SCALE(source_left), rc.Width());
+  int destination_top = min(DPI_SCALE(source_top), rc.Height());
+  int destination_right =
+      min(DPI_SCALE(source_right), rc.Width() - destination_left);
+  int destination_bottom =
+      min(DPI_SCALE(source_bottom), rc.Height() - destination_top);
+
+  const int source_x[] = {0, source_left, source_width - source_right,
+                          source_width};
+  const int source_y[] = {0, source_top, source_height - source_bottom,
+                          source_height};
+  const int destination_x[] = {rc.left, rc.left + destination_left,
+                               rc.right - destination_right, rc.right};
+  const int destination_y[] = {rc.top, rc.top + destination_top,
+                               rc.bottom - destination_bottom, rc.bottom};
+
+  Gdiplus::Graphics graphics(dc);
+  graphics.SetCompositingMode(Gdiplus::CompositingModeSourceOver);
+  graphics.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
+  graphics.SetPixelOffsetMode(Gdiplus::PixelOffsetModeHalf);
+  for (int row = 0; row < 3; ++row) {
+    for (int column = 0; column < 3; ++column) {
+      const int source_piece_width = source_x[column + 1] - source_x[column];
+      const int source_piece_height = source_y[row + 1] - source_y[row];
+      const int destination_piece_width =
+          destination_x[column + 1] - destination_x[column];
+      const int destination_piece_height =
+          destination_y[row + 1] - destination_y[row];
+      if (source_piece_width <= 0 || source_piece_height <= 0 ||
+          destination_piece_width <= 0 || destination_piece_height <= 0)
+        continue;
+      graphics.DrawImage(
+          m_backgroundImage.get(),
+          Gdiplus::Rect(destination_x[column], destination_y[row],
+                        destination_piece_width, destination_piece_height),
+          source_x[column], source_y[row], source_piece_width,
+          source_piece_height, Gdiplus::UnitPixel);
+    }
+  }
+  return true;
 }
 
 void WeaselPanel::_ResizeWindow() {
@@ -995,6 +1063,7 @@ void WeaselPanel::DoPaint(CDCHandle dc) {
   HBITMAP memBitmap = ::CreateCompatibleBitmap(hdc, rcw.Width(), rcw.Height());
   ::SelectObject(memDC, memBitmap);
   ReleaseDC(hdc);
+  Gdiplus::Graphics(memDC).Clear(Gdiplus::Color(0, 0, 0, 0));
   bool drawn = false;
   if (!hide_candidates) {
     CRect auxrc = m_layout->GetAuxiliaryRect();
@@ -1041,6 +1110,7 @@ void WeaselPanel::DoPaint(CDCHandle dc) {
       _HighlightText(memDC, backrc, m_style.back_color, m_style.shadow_color,
                      DPI_SCALE(m_style.round_corner_ex), BackType::BACKGROUND,
                      IsToRoundStruct(), m_style.border_color);
+      drawn |= _DrawBackgroundImage(memDC, backrc);
     }
     if (!m_ctx.aux.str.empty()) {
       if (m_istorepos)

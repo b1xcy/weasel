@@ -18,21 +18,26 @@ global_ascii: false
 style:
   antialias_mode: default
   ascii_tip_follow_cursor: false
-  color_scheme: aqua
-  font_face: Microsoft YaHei
-  label_font_face: Microsoft YaHei
-  comment_font_face: Microsoft YaHei
-  font_point: 14
-  label_font_point: 14
-  comment_font_point: 14
+  color_scheme: koxia
+  background_image: koxia/skin1.png
+  background_image_border_left: 119
+  background_image_border_top: 74
+  background_image_border_right: 206
+  background_image_border_bottom: 34
+  font_face: SimSun, Microsoft YaHei
+  label_font_face: SimSun, Microsoft YaHei
+  comment_font_face: SimSun, Microsoft YaHei
+  font_point: 16
+  label_font_point: 16
+  comment_font_point: 16
   candidate_abbreviate_length: 0
   click_to_capture: false
-  horizontal: false
+  horizontal: true
   fullscreen: false
-  inline_preedit: false
+  inline_preedit: true
   preedit_type: composition
   display_tray_icon: false
-  label_format: "%s."
+  label_format: "%s"
   mark_text: ""
   hover_type: none # semi_light, hilite
   paging_on_scroll: false
@@ -43,18 +48,18 @@ style:
   layout:
     align_type: center
     max_width: 0	#set 0 to disable max width
-    min_width: 160
-    min_height: 0
+    min_width: 340
+    min_height: 110
     max_height: 0	#set 0 to disable max height
-    border_width: 3
-    margin_x: 12
-    margin_y: 12
-    spacing: 10
-    candidate_spacing: 5
-    hilite_spacing: 4
-    hilite_padding: 2
-    round_corner: 4   #别名 hilited_corner_radius
-    corner_radius: 4
+    border_width: 0
+    margin_x: 8
+    margin_y: 42
+    spacing: 6
+    candidate_spacing: 6
+    hilite_spacing: 2
+    hilite_padding: 0
+    round_corner: 0   #别名 hilited_corner_radius
+    corner_radius: 0
     shadow_radius: 0
     shadow_offset_x: 4
     shadow_offset_y: 4
@@ -62,6 +67,27 @@ style:
     baseline: 0 # percentage of font point, 0 to disable
 
 preset_color_schemes:
+  koxia:
+    name: "Koxia / VUP使用"
+    author: "霜奶仙（米画师 ID），Weasel 移植"
+    text_color: 0x7b28d7
+    back_color: 0x00000000
+    shadow_color: 0x00000000
+    border_color: 0x00000000
+    label_color: 0xa973e6
+    candidate_text_color: 0xa973e6
+    candidate_back_color: 0x00000000
+    candidate_shadow_color: 0x00000000
+    candidate_border_color: 0x00000000
+    hilited_text_color: 0x7b28d7
+    hilited_back_color: 0x00000000
+    hilited_candidate_text_color: 0x7b28d7
+    hilited_candidate_back_color: 0x00000000
+    hilited_candidate_shadow_color: 0x00000000
+    hilited_candidate_border_color: 0x00000000
+    comment_text_color: 0xa973e6
+    hilited_comment_text_color: 0x7b28d7
+
   aqua:
     name: 碧水／Aqua
     author: 佛振 <chen.sst@gmail.com>

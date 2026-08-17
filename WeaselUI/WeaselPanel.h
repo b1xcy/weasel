@@ -88,6 +88,7 @@ class WeaselPanel
   bool _DrawPreedit(const Text& text, CDCHandle dc, const CRect& rc);
   bool _DrawPreeditBack(const Text& text, CDCHandle dc, const CRect& rc);
   bool _DrawCandidates(CDCHandle& dc, bool back = false);
+  bool _DrawBackgroundImage(CDCHandle& dc, const CRect& rc);
   void _HighlightText(CDCHandle& dc,
                       const CRect& rc,
                       const COLORREF& color,
@@ -131,6 +132,8 @@ class WeaselPanel
   // for gdiplus drawings
   Gdiplus::GdiplusStartupInput _m_gdiplusStartupInput;
   ULONG_PTR _m_gdiplusToken;
+  std::unique_ptr<Gdiplus::Image> m_backgroundImage;
+  std::wstring m_backgroundImagePath;
 
   UINT dpi;
 

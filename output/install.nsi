@@ -1,4 +1,4 @@
-﻿; weasel installation script
+; weasel installation script
 !include FileFunc.nsh
 !include LogicLib.nsh
 !include MUI2.nsh
@@ -178,10 +178,12 @@ call_uninstaller:
   ; Remove files and uninstaller
   Delete  "$R1\data\opencc\*.*"
   Delete  "$R1\data\preview\*.*"
+  Delete  "$R1\data\koxia\*.*"
   Delete  "$R1\data\*.*"
   Delete  "$R1\*.*"
   RMDir   "$R1\data\opencc"
   RMDir   "$R1\data\preview"
+  RMDir   "$R1\data\koxia"
   RMDir   "$R1\data"
   RMDir   "$R1"
   SetShellVarContext all
@@ -291,6 +293,9 @@ program_files:
   ; images
   SetOutPath $INSTDIR\data\preview
   File "data\preview\*.png"
+  ; Koxia skin
+  SetOutPath $INSTDIR\data\koxia
+  File "data\koxia\*.png"
 
   SetOutPath $INSTDIR
 
@@ -398,10 +403,12 @@ Section "Uninstall"
   SetOutPath $TEMP
   Delete  "$INSTDIR\data\opencc\*.*"
   Delete  "$INSTDIR\data\preview\*.*"
+  Delete  "$INSTDIR\data\koxia\*.*"
   Delete  "$INSTDIR\data\*.*"
   Delete  "$INSTDIR\*.*"
   RMDir  "$INSTDIR\data\opencc"
   RMDir  "$INSTDIR\data\preview"
+  RMDir  "$INSTDIR\data\koxia"
   RMDir  "$INSTDIR\data"
   RMDir  "$INSTDIR"
   SetShellVarContext all
